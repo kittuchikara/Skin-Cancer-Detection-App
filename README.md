@@ -63,3 +63,4 @@ The system performs real-time image classification through an interactive web in
 ---
 
 > Note: Model file (.h5) is hosted externally to avoid GitHub size limits.
+> 👉 [Download Model Here] (https://drive.google.com/uc?id=1XyRpIGwXgfcyA_ERsqmlGdMIqUeig3dH)
