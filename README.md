@@ -68,3 +68,8 @@ The system performs real-time image classification through an interactive web in
 >
 > ## 🌐 Live Demo
 👉 https://skin-cancer-detection-app-mxnpjr9nzszuwaiaims8yu.streamlit.app
+
+## 🔗 Dataset Link
+👉 https://www.kaggle.com/datasets/bhaveshmittal/melanoma-cancer-dataset
+
+
