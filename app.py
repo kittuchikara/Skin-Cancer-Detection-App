@@ -4,11 +4,10 @@ import numpy as np
 from PIL import Image
 import gdown
 import os
-import cv2
 
 
 MODEL_PATH = "melanoma_model.h5"
-MODEL_URL = "https://drive.google.com/uc?id=1XyRpIGwXgfcyA_ERsqmlGdMIqUeig3dH"
+MODEL_URL = "https://drive.google.com/uc?id=1XyRpIGwXgfcyA_ERsqmlGdMIqUeig3dH"  
 
 
 st.set_page_config(
@@ -22,8 +21,6 @@ st.markdown(
     "Upload a skin lesion image to predict whether it is **Benign** or **Malignant**."
 )
 
-
-# Download model if not present
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Downloading model... Please wait ⏳"):
         gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
@@ -34,20 +31,6 @@ def load_model():
     return tf.keras.models.load_model(MODEL_PATH)
 
 model = load_model()
-
-
-# Optional skin check (soft warning only)
-def is_skin_image(image):
-    img = np.array(image)
-    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-
-    lower = np.array([0, 20, 70])
-    upper = np.array([20, 255, 255])
-
-    mask = cv2.inRange(hsv, lower, upper)
-    skin_ratio = np.sum(mask > 0) / mask.size
-
-    return skin_ratio > 0.01
 
 
 st.sidebar.header("⚙️ Model Settings")
@@ -61,7 +44,7 @@ threshold = st.sidebar.slider(
 )
 
 st.sidebar.markdown(
-"""
+    """
 Lower threshold → Higher cancer detection (higher recall)  
 Higher threshold → Fewer false alarms (higher precision)
 """
@@ -73,36 +56,37 @@ uploaded_file = st.file_uploader(
     type=["jpg", "jpeg", "png"]
 )
 
-
 if uploaded_file is not None:
     try:
         image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        # Soft validation only
-        if not is_skin_image(image):
-            st.warning("⚠️ Image may not clearly contain skin. Prediction may be unreliable.")
-
         img = image.resize((224, 224))
-        img_array = np.array(img) 
+        img_array = np.array(img)
         img_array = np.expand_dims(img_array, axis=0)
 
         with st.spinner("Analyzing image..."):
             prediction = float(model.predict(img_array)[0][0])
 
+        confidence = max(prediction, 1 - prediction)
+
         st.subheader("🔍 Prediction Result")
 
-        if prediction > threshold:
-            confidence = prediction * 100
+        if confidence < 0.65:
+            st.warning(
+                "⚠️ The uploaded image may not be a valid skin lesion. "
+                "Prediction may be unreliable."
+            )
+
+        if prediction >= threshold:
             st.error(
                 f"⚠️ **Malignant Detected**\n\n"
-                f"Confidence: {confidence:.2f}%"
+                f"Confidence: {prediction*100:.2f}%"
             )
         else:
-            confidence = (1 - prediction) * 100
             st.success(
                 f"✅ **Benign Detected**\n\n"
-                f"Confidence: {confidence:.2f}%"
+                f"Confidence: {(1-prediction)*100:.2f}%"
             )
 
         st.markdown("---")
