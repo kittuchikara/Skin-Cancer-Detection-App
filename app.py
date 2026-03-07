@@ -79,7 +79,6 @@ if uploaded_file is not None:
         image = Image.open(uploaded_file).convert("RGB")
         st.image(image, caption="Uploaded Image", use_column_width=True)
 
-        # Check if image contains skin
         if not is_skin_image(image):
             st.warning("⚠️ The uploaded image does not appear to contain skin. Please upload a skin lesion image.")
         else:
