@@ -46,7 +46,7 @@ def is_skin_image(image):
     mask = cv2.inRange(hsv, lower, upper)
     skin_ratio = np.sum(mask > 0) / mask.size
 
-    return skin_ratio > 0.15
+    return skin_ratio > 0.03
 
 
 
