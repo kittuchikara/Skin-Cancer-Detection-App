@@ -84,7 +84,7 @@ if uploaded_file is not None:
             st.warning("⚠️ Image may not clearly contain skin. Prediction may be unreliable.")
 
         img = image.resize((224, 224))
-        img_array = np.array(img) / 255.0
+        img_array = np.array(img) 
         img_array = np.expand_dims(img_array, axis=0)
 
         with st.spinner("Analyzing image..."):
