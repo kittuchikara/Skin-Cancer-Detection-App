@@ -6,3 +6,4 @@ scikit-learn
 matplotlib
 seaborn
 gdown
+opencv-python-headless
