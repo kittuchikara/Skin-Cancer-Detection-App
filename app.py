@@ -50,12 +50,19 @@ Higher threshold → Fewer false alarms (higher precision)
 """
 )
 
-st.markdown("""
-⚠️ **Important:**  
-This model is trained only on **dermoscopic skin lesion images**.  
-Please upload a **skin lesion image only**.  
+st.markdown("<br>", unsafe_allow_html=True)
+
+st.warning("""
+⚠️ **Important**
+
+This model is trained only on **dermoscopic skin lesion images**.
+
+Please upload a **skin lesion image only**.
+
 Other images (animals, objects, etc.) may produce incorrect predictions.
 """)
+
+st.markdown("<br>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader(
     "Upload Image",
