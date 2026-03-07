@@ -50,6 +50,12 @@ Higher threshold → Fewer false alarms (higher precision)
 """
 )
 
+st.markdown("""
+⚠️ **Important:**  
+This model is trained only on **dermoscopic skin lesion images**.  
+Please upload a **skin lesion image only**.  
+Other images (animals, objects, etc.) may produce incorrect predictions.
+""")
 
 uploaded_file = st.file_uploader(
     "Upload Image",
@@ -68,25 +74,19 @@ if uploaded_file is not None:
         with st.spinner("Analyzing image..."):
             prediction = float(model.predict(img_array)[0][0])
 
-        confidence = max(prediction, 1 - prediction)
-
         st.subheader("🔍 Prediction Result")
 
-        if confidence < 0.65:
-            st.warning(
-                "⚠️ The uploaded image may not be a valid skin lesion. "
-                "Prediction may be unreliable."
-            )
-
-        if prediction >= threshold:
+        if prediction > threshold:
+            confidence = prediction * 100
             st.error(
                 f"⚠️ **Malignant Detected**\n\n"
-                f"Confidence: {prediction*100:.2f}%"
+                f"Confidence: {confidence:.2f}%"
             )
         else:
+            confidence = (1 - prediction) * 100
             st.success(
                 f"✅ **Benign Detected**\n\n"
-                f"Confidence: {(1-prediction)*100:.2f}%"
+                f"Confidence: {confidence:.2f}%"
             )
 
         st.markdown("---")
@@ -102,4 +102,4 @@ st.markdown("---")
 st.caption(
     "⚠️ Disclaimer: This AI tool is for educational purposes only "
     "and is not a substitute for professional medical diagnosis."
-)
+) 
